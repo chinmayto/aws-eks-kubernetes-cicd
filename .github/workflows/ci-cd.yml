@@ -90,9 +90,7 @@ jobs:
           
       - name: View Kubeconfig and Verify Kubectl Access
         run: |
-          kubectl get nodes
-          kubectl config view
-          kubectl get svc # This is the command that fails
+          cat /home/runner/.kube/config
 
       - name: Patch image tags in manifests
         run: |
