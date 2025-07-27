@@ -84,17 +84,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
-          kubectl version
+      - name: Check AWS Caller Identity
+        run: aws sts get-caller-identity
 
       - name: Authenticate to EKS cluster
         uses: aws-actions/eks-login@v1
         with:
-            cluster-name: ${{ secrets.CLUSTER_NAME }}
-            region: ${{ secrets.REGION }}
-         
+          cluster-name: ${{ secrets.EKS_CLUSTER_NAME }}
+          region: ${{ secrets.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+          
+      - name: View Kubeconfig and Verify Kubectl Access
+        run: |
+          kubectl config view
+          kubectl get svc # This is the command that fails
+
       - name: Patch image tags in manifests
         run: |
           TAG=${GITHUB_SHA::7}
