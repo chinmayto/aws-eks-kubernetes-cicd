@@ -27,7 +27,7 @@ jobs:
       - name: Build and push vote image
         run: |
           TAG=${GITHUB_SHA::7}
-          docker build -t $REGISTRY/$IMAGE_PREFIX/vote:$TAG ./vote
+          docker build -t $REGISTRY/$IMAGE_PREFIX/vote:$TAG ./app/vote
           docker push $REGISTRY/$IMAGE_PREFIX/vote:$TAG
 
   build-result:
@@ -47,7 +47,7 @@ jobs:
       - name: Build and push result image
         run: |
           TAG=${GITHUB_SHA::7}
-          docker build -t $REGISTRY/$IMAGE_PREFIX/result:$TAG ./result
+          docker build -t $REGISTRY/$IMAGE_PREFIX/result:$TAG ./app/result
           docker push $REGISTRY/$IMAGE_PREFIX/result:$TAG
 
   build-worker:
@@ -67,13 +67,13 @@ jobs:
       - name: Build and push worker image
         run: |
           TAG=${GITHUB_SHA::7}
-          docker build -t $REGISTRY/$IMAGE_PREFIX/worker:$TAG ./worker
+          docker build -t $REGISTRY/$IMAGE_PREFIX/worker:$TAG ./app/worker
           docker push $REGISTRY/$IMAGE_PREFIX/worker:$TAG
 
   deploy:
     name: Deploy to EKS
     runs-on: ubuntu-latest
-    needs: build-result
+    needs: build-worker
     steps:
       - uses: actions/checkout@v3
 
