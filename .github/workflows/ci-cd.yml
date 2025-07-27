@@ -88,13 +88,7 @@ jobs:
         run: |
           aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
           kubectl version
-
-      - name: Authenticate to EKS cluster
-        uses: aws-actions/eks-login@v1
-        with:
-            cluster-name: ${{ secrets.CLUSTER_NAME }}
-            region: ${{ secrets.REGION }}
-         
+      
       - name: Patch image tags in manifests
         run: |
           TAG=${GITHUB_SHA::7}
