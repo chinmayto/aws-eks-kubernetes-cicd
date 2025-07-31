@@ -8,8 +8,9 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    alb.ingress.kubernetes.io/group.name: voting-app
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
 spec:
+  ingressClassName: alb
   rules:
     - http:
         paths:
@@ -19,11 +20,11 @@ spec:
               service:
                 name: vote
                 port:
-                  number: 80
+                  number: 8080
           - path: /result
             pathType: Prefix
             backend:
               service:
                 name: result
                 port:
-                  number: 80
+                  number: 8081
